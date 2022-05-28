@@ -1,0 +1,24 @@
+{
+  "name": "note-taker",
+  "version": "1.0.0",
+  "description": "This application will store notes from the user in the back end and allow them to view and delete them at a later time.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gkal14/note-taker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gkal14/note-taker/issues"
+  },
+  "homepage": "https://github.com/Gkal14/note-taker#readme",
+  "dependencies": {
+    "-": "^0.0.1",
+    "inquirer": "^8.2.4"
+  }
+}
