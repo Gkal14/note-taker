@@ -1,77 +1,74 @@
-// dependencies
+//dependencies
+const fs = require("fs");
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
-const util = require("util");
 
-const readFileAsync = util.promisify(fs.readFile);
-const writeFileAsync = util.promisify(fs.writeFile);
 
-// server set up
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.static("public"));
+//serve images, CSS files, and JavaScript files in a directory named public
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// GET request
-app.get("api/notes", function(req, res) {
-    readFileAsync("db.json", "utf8").then(function(data){
-      notes=[].concat(JSON.parse(data))
-      res.json(notes);
-    })
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-// API route | POST request
+app.get("/notes", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
+
+app.get("/api/notes", (req, res) => {
+    res.sendFile(path.join(__dirname, "./db/db.json"));
+});
+
+
 app.post("/api/notes", function(req, res) {
-    const note = req.body;
-    readFileAsync("db.json", "utf8").then(function(data){
-      const notes = [].concat(JSON.parse(data));
-      note.id = notes.length + 1
-      notes.push(note);
-      return notes
-    }).then(function(notes) {
-      writeFileAsync("db.json", JSON.stringify(notes))
-      res.json(note);
-    })
-  });
-
-  // API Route | DELETE request
-  app.delete("/api/notes/:id", function(req,res){
-    const idToDelete = ParseInt(req.params.id);
-    readFileAsync("db.json", "utf8").then(function(data){
-      const notes = [].concat(JSON.parse(data));
-      const newNotesData = []
-      for (let i = 0; i<notes.length; i++) {
-        if(idToDelete !== notes[i].id){
-          newNotesData.push(notes[i])
+    fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", function(error, response) {
+        if (error) {
+            console.log(error);
         }
-      }
-      return newNotesData
-    }).then(function(notes){
-      writeFileAsync("db.json", JSON.stringify(notes))
-      res.send('saved succesfully!');
-    })
-  });
-
-// HTML routes
-app.get("/notes", function(req,res){
-  res.sendFile(path.join(__dirname, "./public/notes.html"));
+        const notes = JSON.parse(response);
+        const noteRequest = req.body;
+        const newNoteID = notes.length + 1;
+        const newNote = {
+            id: newNoteID,
+            title: noteRequest.title,
+            text: noteRequest.text
+        };
+        notes.push(newNote);
+        res.json(newNote);
+        fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(notes, null, 2), function(err) {
+            if (err) throw err;
+        });
+    });
 });
 
-app.get("/", function(req,res){
-  res.sendFile(path.join(__dirname, "./public/index.html"));
+app.delete("/api/notes/:id", function(req, res) {
+    const deleteID = req.params.id;
+    fs.readFile("./db/db.json", "utf8", function(error, response) {
+        if (error) {
+            console.log(error);
+        }
+        let notes = JSON.parse(response);
+        if(deleteID <= notes.length) {
+            res.json(notes.splice(deleteID-1,1));
+            for (let i = 0; i < notes.length; i++) {
+                notes[i].id = i+1;
+            }
+            fs.writeFile("./db/db.json", JSON.stringify(notes, null, 2), function(err) {
+                if (err) throw err;
+            });
+        }else {
+            res.json(false);
+        }
+    });
 });
 
-app.get("*", function(req,res){
-  res.sendFile(path.join(__dirname, "./public/index.html"));
-});
-
-// Listen
-app.listen(PORT, function(){
-  console.log("App listening on PORT " + PORT)
-});
-
-
+//listen 
+app.listen(PORT, () => console.log("Server listening on port " + PORT));
+  
+  
 
