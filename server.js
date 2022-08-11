@@ -2,12 +2,10 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const { json } = require("express");
-const { get } = require("http");
-const util = erquire("util");
+const util = require("util");
 
 const readFileAsync = util.promisify(fs.readFile);
-const writeFileAsync = util.promisify(fs.writefile);
+const writeFileAsync = util.promisify(fs.writeFile);
 
 // server set up
 const app = express();
@@ -40,7 +38,7 @@ app.post("/api/notes", function(req, res) {
   });
 
   // API Route | DELETE request
-  appp.delete("./api/notes/:id", function(req,res){
+  app.delete("/api/notes/:id", function(req,res){
     const idToDelete = ParseInt(req.params.id);
     readFileAsync("./db/db.json", "utf8").then(function(data){
       const notes = [].concat(JSON.parse(data));
@@ -63,7 +61,7 @@ app.get("/notes", function(req,res){
 });
 
 app.get("/", function(req,res){
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 app.get("*", function(req,res){
@@ -74,3 +72,4 @@ app.get("*", function(req,res){
 app.listen(PORT, function(){
   console.log("App listening on PORT " + PORT)
 });
+
