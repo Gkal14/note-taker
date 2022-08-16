@@ -10,25 +10,18 @@ const writeFileAsync = util.promisify(fs.writeFile);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-let db = require("./db/db.json");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static("./public"));
 
 const dbNotes = JSON.parse(
 fs.readFileSync(path.join(__dirname, "./db/db.json"), (err, data) => {
     if (err) throw err;
 }));
 
-const dbUpdate = dbNotes => {
-fs.writeFileSync(
-    path.join(__dirname, "./db/db.json"),
-    JSON.stringify(dbNotes),
-    err => {
-    if (err) throw err;
-    })
-};
 
-// GET requests
+// html routes
 app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "/public/index.html"));
 });
@@ -48,6 +41,14 @@ app.get("/assets/css/styles.css", function(req, res) {
 app.get("/assets/js/index.js", function(req, res) {
     res.sendFile(path.join(__dirname, "/public/assets/js/index.js"));
     });
+
+// GET request
+app.get("/api/notes", function(req, res) {
+      readFileAsync("./db/db.json", "utf8").then(function(data) {
+          notes = [].concat(JSON.parse(data))
+          res.json(notes);
+        })
+    }); 
   
 // POST request
 app.post("/api/notes", function(req, res) {
