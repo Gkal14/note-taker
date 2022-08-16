@@ -10,6 +10,4 @@ When the + icon is clickedI click in the navigation at the top of the page<br>
 then the user is presented with empty fields to enter a new note title and the note’s text in the right-hand column
 <br>
 <br>
-IMPLEMENTATION ISSUES:
-When the "get started" button is clicked from the landing page, the user is redirected to : https://note-taker-gk.herokuapp.com/notes.html<br>
-the user must change the URL to https://note-taker-gk.herokuapp.com/notes which will take them to the functioning notes.html page.
+URL to the deployed application: https://note-taker-gk.herokuapp.com/
