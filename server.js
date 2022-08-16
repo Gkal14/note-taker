@@ -23,11 +23,11 @@ fs.readFileSync(path.join(__dirname, "./db/db.json"), (err, data) => {
 
 // html routes
 app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "/public/index.html"));
+    res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 app.get("/notes",  function(req, res) {
-    res.sendFile(path.join(__dirname, "/public/notes.html"));
+    res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
 app.get("/api/notes", function(req, res) {
@@ -35,11 +35,11 @@ app.get("/api/notes", function(req, res) {
 });
 
 app.get("/assets/css/styles.css", function(req, res) {
-    res.sendFile(path.join(__dirname, "/public/assets/css/styles.css"));
+    res.sendFile(path.join(__dirname, "./public/assets/css/styles.css"));
     });
     
 app.get("/assets/js/index.js", function(req, res) {
-    res.sendFile(path.join(__dirname, "/public/assets/js/index.js"));
+    res.sendFile(path.join(__dirname, "./public/assets/js/index.js"));
     });
 
 // GET request
